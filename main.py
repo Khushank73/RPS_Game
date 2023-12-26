@@ -1,6 +1,5 @@
 import random
 import time
-
 import cv2
 import cvzone
 from cvzone.HandTrackingModule import HandDetector
@@ -11,6 +10,7 @@ cap.set(4, 480)
 
 
 detector = HandDetector(maxHands=1)
+
 timer = 0
 startbut = False
 startGame = False
@@ -19,10 +19,14 @@ scores = [0, 0]
 
 while True:
     bg_img = cv2.imread("Resources/BG.png")
+    
     success, img = cap.read()
+    
     imgScale = cv2.resize(img, (0, 0), None, 0.875, 0.875)
     imgScale = imgScale[:, 80:480]
+    
     hands, img = detector.findHands(imgScale)
+    
     if startGame:
         if startbut is False:
             timer = time.time() - initialTime
@@ -54,13 +58,16 @@ while True:
                         scores[0] += 1
 
     bg_img[234:654, 795:1195] = imgScale
+    
     if startbut:
         bg_img = cvzone.overlayPNG(bg_img, AIimg, (149, 310))
+        
     cv2.putText(bg_img, str((scores[0])), (410, 215), cv2.FONT_HERSHEY_PLAIN, 4, (255, 0, 255), 6)
     cv2.putText(bg_img, str((scores[1])), (1112, 215), cv2.FONT_HERSHEY_PLAIN, 4, (255, 0, 255), 6)
 
     cv2.imshow("BG", bg_img)
     key = cv2.waitKey(1)
+    
     if key == ord('s'):
         startGame = True
         initialTime = time.time()
